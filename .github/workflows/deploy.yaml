@@ -25,4 +25,4 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: neerajai97/Researcher-ai:latest
+        tags: neerajai97/researcher-ai:latest
