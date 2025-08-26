@@ -29,7 +29,7 @@ if user_input:
     st.session_state.chat_history.append({"role": "user", "content": user_input})
     st.chat_message("user").write(user_input)
 
-    # Prepare input for the agent
+    # Prepare input for the agent-
     chat_input = {"messages": [{"role": "system", "content": INITIAL_PROMPT}] + st.session_state.chat_history}
     logger.info("Starting agent processing...")
 
