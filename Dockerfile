@@ -2,14 +2,13 @@ FROM python:3.13
 
 WORKDIR /app
 
-# Install dependencies for tectonic (Debian/Ubuntu base assumed)
-RUN apt-get update && apt-get install -y wget curl libssl-dev libclang-dev pkg-config ca-certificates
-# Download and install tectonic binary
-RUN curl -LO https://github.com/tectonic-typesetting/tectonic/releases/latest/download/tectonic-x86_64-linux.tar.gz && \
+RUN apt-get update && apt-get install -y wget curl libssl-dev libclang-dev pkg-config ca-certificates && \
+    curl -LO https://github.com/tectonic-typesetting/tectonic/releases/latest/download/tectonic-x86_64-linux.tar.gz && \
     tar -xzf tectonic-x86_64-linux.tar.gz && \
-    mv tectonic /usr/local/bin/ && \
+    mv tectonic-x86_64-linux/tectonic /usr/local/bin/tectonic && \
     chmod +x /usr/local/bin/tectonic && \
-    rm -rf tectonic-x86_64-linux.tar.gz
+    rm -rf tectonic-x86_64-linux.tar.gz tectonic-x86_64-linux
+
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
