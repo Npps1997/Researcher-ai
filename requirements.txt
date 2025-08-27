@@ -1,6 +1,7 @@
 langchain_core
 langchain-groq
 langgraph
+langchain-google-genai
 dotenv
 PyPDF2
 requests
