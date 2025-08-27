@@ -26,7 +26,7 @@ import os
 from langchain_groq import ChatGroq
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", api_key=os.getenv("GOOGLE_API_KEY")).bind_tools(tools)
+model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=os.getenv("GOOGLE_API_KEY")).bind_tools(tools)
 model = model.bind_tools(tools)
 
 # Step4: Setup graph
