@@ -9,8 +9,10 @@ RUN apt-get update && apt-get install -y \
 # Download & install Tectonic prebuilt binary (Linux x86_64-gnu)
 RUN curl -L https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-unknown-linux-gnu.tar.gz \
     -o /tmp/tectonic.tar.gz \
-    && tar -xzf /tmp/tectonic.tar.gz -C /usr/local/bin --strip-components=1 \
-    && rm /tmp/tectonic.tar.gz
+    && tar -xzf /tmp/tectonic.tar.gz -C /tmp \
+    && mv /tmp/tectonic-0.15.0-x86_64-unknown-linux-gnu/tectonic /usr/local/bin/ \
+    && chmod +x /usr/local/bin/tectonic \
+    && rm -rf /tmp/tectonic*
 
 # Verify installation
 RUN tectonic --version
