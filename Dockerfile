@@ -1,28 +1,9 @@
 FROM python:3.13-slim
 
-# Install basic tools
-RUN apt-get update && apt-get install -y \
-    curl \
-    tar \
-    && rm -rf /var/lib/apt/lists/*
-
-# Download & install Tectonic prebuilt binary (Linux x86_64-gnu)
-
-RUN curl -L https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-unknown-linux-gnu.tar.gz \
-    -o /tmp/tectonic.tar.gz \
-    && tar -xzf /tmp/tectonic.tar.gz -C /tmp \
-    && mv /tmp/tectonic-0.15.0-x86_64-unknown-linux-gnu/bin/tectonic /usr/local/bin/ \
-    && chmod +x /usr/local/bin/tectonic \
-    && rm -rf /tmp/tectonic*
-
-
-# Verify installation
-RUN tectonic --version
-
-# Set workdir
+# Set working directory
 WORKDIR /app
 
-# Install Python deps
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -32,5 +13,5 @@ COPY . .
 # Expose Streamlit port
 EXPOSE 8501
 
-# Run the Streamlit app
-CMD ["streamlit", "run", "frontend.py"]
+# Run Streamlit app
+CMD ["streamlit", "run", "frontend.py", "--server.port=8501", "--server.address=0.0.0.0"]
