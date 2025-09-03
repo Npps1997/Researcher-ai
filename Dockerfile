@@ -1,9 +1,10 @@
 FROM python:3.13-slim
 
-# Install system deps (Rust, Cargo, Graphite2, Harfbuzz, fonts, etc.)
+# Install system deps (Rust, Cargo, Graphite2, Harfbuzz, C++ compiler, etc.)
 RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
+    g++ \
     fontconfig \
     libfontconfig1 \
     libssl-dev \
@@ -20,6 +21,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Install Tectonic using Cargo
 RUN cargo install tectonic
+
 
 # Set working directory
 WORKDIR /app
