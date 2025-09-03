@@ -1,19 +1,6 @@
-# FROM python:3.13
-
-# WORKDIR /app
-
-# COPY requirements.txt .
-# RUN pip install -r requirements.txt
-
-# COPY . .
-
-# EXPOSE 8501
-
-# CMD ["streamlit", "run", "frontend.py"]
-
 FROM python:3.13-slim
 
-# Install system deps (Rust, Cargo, build tools, fonts, etc.)
+# Install system deps (Rust, Cargo, Graphite2, Harfbuzz, fonts, etc.)
 RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
@@ -23,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     git \
     ca-certificates \
+    libgraphite2-dev \
+    libharfbuzz-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Rust + Cargo
