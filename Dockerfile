@@ -1,40 +1,34 @@
-FROM python:3.13-slim
+FROM python:3.13
 
-# Install system deps (Rust, Cargo, Graphite2, Harfbuzz, C++ compiler, etc.)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
     build-essential \
-    g++ \
-    fontconfig \
-    libfontconfig1 \
-    libssl-dev \
+    cmake \
     pkg-config \
-    git \
-    ca-certificates \
-    libgraphite2-dev \
+    libssl-dev \
+    libfontconfig1-dev \
+    libfreetype6-dev \
     libharfbuzz-dev \
+    libicu-dev \
+    zlib1g-dev \
+    curl \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Rust + Cargo
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# Install Tectonic using Cargo
+# Install Tectonic
 RUN cargo install tectonic
 
-
-# Set working directory
 WORKDIR /app
 
-# Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy source code
 COPY . .
 
-# Expose Streamlit port
 EXPOSE 8501
 
-# Run Streamlit
-CMD ["streamlit", "run", "frontend.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "frontend.py"]
