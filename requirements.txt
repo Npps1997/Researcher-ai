@@ -6,3 +6,4 @@ dotenv
 PyPDF2
 requests
 streamlit
+langgraph-checkpoint-sqlite
