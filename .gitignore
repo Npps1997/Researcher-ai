@@ -18,6 +18,9 @@ __pycache__/
 *.log
 *.tmp
 
+# db
+.db
+
 # OS generated files
 .DS_Store
 Thumbs.db

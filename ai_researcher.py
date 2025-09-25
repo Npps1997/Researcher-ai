@@ -31,10 +31,10 @@ model = model.bind_tools(tools)
 
 # Step4: Setup graph
 
-#from langgraph.prebuilt import ToolNode
 from langgraph.graph import END, START, StateGraph
 
 def call_model(state: State):
+    """LLM node that may answer or request a tool call."""
     messages = state["messages"]
     response = model.invoke(messages)
     return {"messages": [response]}
@@ -47,6 +47,8 @@ def should_continue(state: State) -> Literal["tools", END]:
         return "tools"
     return END
 
+# GRAPH
+
 workflow = StateGraph(State)
 workflow.add_node("agent", call_model)
 workflow.add_node("tools", tool_node)
@@ -54,11 +56,15 @@ workflow.add_edge(START, "agent")
 workflow.add_conditional_edges("agent", should_continue)
 workflow.add_edge("tools", "agent")
 
-from langgraph.checkpoint.memory import MemorySaver
-checkpointer = MemorySaver()
-config = {"configurable": {"thread_id": 222222}}
+# CHECKPOINTER
 
-graph = workflow.compile(checkpointer=checkpointer)
+from langgraph.checkpoint.sqlite import SqliteSaver
+import sqlite3
+
+conn = sqlite3.connect(database = "researcher.db", check_same_thread = False)
+checkpointer = SqliteSaver(conn = conn)
+
+chatbot = workflow.compile(checkpointer=checkpointer)
 
 # Step5: TESTING
 INITIAL_PROMPT = """
@@ -85,20 +91,27 @@ Finally, I'll ask you to go ahead and write the paper. Make sure that you
 include mathematical equations in the paper. Once it's complete, you should
 render it as a LaTeX PDF. Make sure that TEX file is correct and there is no error in it so that PDF is easily exported. When you give papers references, always attatch the pdf links to the paper"""
 
-def print_stream(stream):
-    for s in stream:
-        message = s["messages"][-1]
-        print(f"Message received: {message.content[:200]}...")
-        message.pretty_print()
 
-# """while True:
-#     user_input = input("User: ")
-#     if user_input:
-#         messages = [
-#                     {"role": "system", "content": INITIAL_PROMPT},
-#                     {"role": "user", "content": user_input}
-#                 ]
-#         input_data = {
-#             "messages" : messages
-#         }
-#         print_stream(graph.stream(input_data, config, stream_mode="values"))"""
+# HELPER FUNCTION
+
+def retrieve_all_threads():
+    all_threads = set()
+    for checkpoint in checkpointer.list(None):
+        all_threads.add(checkpoint.config['configurable']['thread_id'])
+
+    return list(all_threads)
+
+# test
+
+# def print_stream(stream):
+#     for s in stream:
+#         message = s["messages"][-1]
+#         print(f"Message received: {message.content[:200]}...")
+#         message.pretty_print()
+
+# CONFIG = {'configurable': {'thread_id': 'thread_1'}}
+# from langchain_core.messages import HumanMessage, AIMessage
+# response = chatbot.invoke({"messages": HumanMessage(content="What is my name")}, CONFIG)
+
+# print(response)
+
