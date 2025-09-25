@@ -129,6 +129,13 @@ This repo includes a workflow file under .github/workflows/deploy.yaml:
 - Builds Docker image
 - Deploys app automatically
 
+## 🆕 What’s New
+
+- Replaced MemorySaver → SQLite Checkpointer for persistence.
+- Added multi-thread chat support (users can switch between past conversations).
+- Sidebar now shows Chat 1, Chat 2, … instead of UUIDs.
+- Cleaner UI/UX similar to ChatGPT experience.
+
 ## ⭐ Acknowledgments
 
 - [LangGraph](https://github.com/langchain-ai/langgraph) & [LangChain](https://www.langchain.com/)
